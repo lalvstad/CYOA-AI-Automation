@@ -1,92 +1,113 @@
 import { Key, useState} from 'react';
 
+class TreeNode {
+  private _scene: Scene;
+  private _left: TreeNode | null;
+  private _right: TreeNode | null;
+
+  public get scene(): Scene {
+    return this._scene;
+  }
+
+  public set scene(scene: Scene) {
+    this._scene = scene;
+  }
+
+  public get Left(): TreeNode | null {
+    return this._left;
+  }
+
+  public set left(node: TreeNode) {
+    if (node !== null) {
+      this._left = node;
+    } else {
+      this._left = null;
+    }
+  }
+
+  public get Right(): TreeNode | null {
+    return this._right;
+  }
+
+  public set right(node: TreeNode) {
+    if (node !== null) {
+      this._right = node;
+    } else {
+      this._right = null;
+    }
+  }
+
+  constructor(scene: any) {
+    this._scene = scene;
+    this._left = null;
+    this._right = null;
+  }
+}
+
+class Scene {
+  private _prompt: string;
+  private _choice1: string[];
+  private _choice2: string[];
+
+  public get prompt(): string {
+    return this._prompt;
+  }
+
+  public set prompt(value: string) {
+    this._prompt = value;
+  }
+
+  public get choice1(): string[] {
+    return this._choice1;
+  }
+
+  public set choice1(value: string[]) {
+    this._choice1 = value;
+  }
+
+  public get choice2(): string[] {
+    return this._choice2;
+  }
+
+  public set choice2(value: string[]) {
+    this._choice2 = value;
+  }
+
+  constructor(prompt: string, choice1: string[], choice2: string[]) {
+    this._prompt = prompt;
+    this._choice1 = choice1;
+    this._choice2 = choice2;
+  }
+}
+
+/*
+* TRACKING STORY LINES
+* CODE: _ _ _ _
+* 1: C = CEO, E = Employee. 2: A-Z for different story line from choice. 3, 4: 1-9 for scene numbers in that storyline.
+* */
+
+// [SceneCode, [prompt, [choice1, nextScene], [choice2, nextScene]]]
+const employeeScenes = [
+    ["EA01",["Prompt1" , ["", ""], ["", ""]]],
+    ["EA01",["Prompt1" , ["", ""], ["", ""]]],
+    ["EA01",["Prompt1" , ["", ""], ["", ""]]],
+    ["EA01",["Prompt1" , ["", ""], ["", ""]]],
+    ["EA01",["Prompt1" , ["", ""], ["", ""]]],
+    ["EA01",["Prompt1" , ["", ""], ["", ""]]],
+    ["EA01",["Prompt1" , ["", ""], ["", ""]]],
+    ["EA01",["Prompt1" , ["", ""], ["", ""]]],
+]
+
+const root = new TreeNode('start');
+
 export default function AdventureGame() {
 
   const [currentScene, setCurrentScene] = useState('start');
   const [aiScore, setAIScore] = useState(50); // 0 - Negative feeling, 50 - neutral feeling, - 100 Positive feeling
   const [isCEO, setIsCEO] = useState(false);
 
-  const employeeScenes = {
-    start: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "sceneA1"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene1: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "sceneA2"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene2: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "sceneA3"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene3: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "sceneA4"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene4: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "SceneA5"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene5: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "SceneA6"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene6: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "SceneA7"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene7: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "SceneA8"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene8: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "SceneA8"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-
-    scene9: {
-      text: "placeholder",
-      choices: [
-        {text: "placeholder", nextScene: "deepForest"},
-        {text: "placeholder", nextScene: "placeholder"},
-      ]
-    },
-  };
+  // convert over into a binary tree data structure, with each of the scenes as the left and right child of the
+  // root scene.
 
   const handleChoice = (choice: any) => {
     if (typeof choice === "number") {
@@ -107,8 +128,6 @@ export default function AdventureGame() {
     setAIScore(50);
     setIsCEO(false);
   }
-
-  const scene = scenes[currentScene];
 
   return (
       <div className="flex flex-col items-center juastify-center min-h-screen bg-gray-800 text-white p-4">
